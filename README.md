@@ -6,8 +6,9 @@
 _Life  is short_
 
 This is a selenium-based automation tool built to improve the work efficiency of tedious digital library tasks.
-It significantly improves the needed time for transcript uploading and metadata editing of the items in a digital collection by: 
+It significantly improves the needed time for transcript uploading and metadata editing of the items in a digital collection. 
 
+It is able to:
   * Merge multiple ```.txt``` transcript files with the same name tag into a ```.pdf```  and a ```.txt``` transcripts based.
   * Generate a ```.csv``` file that maps the ```uuid``` of the collections websites to item names and identifiers.
   * Automates the editing and uploading process through ```selenium```
