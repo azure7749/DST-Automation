@@ -1,0 +1,8 @@
+/.venv/
+/screenshots/
+/.idea/
+/files/spreadsheet.xlsx
+/files/updated_project_status.xlsx
+/docs/upload_log.txt
+/docs/upload_report.txt
+/files/screenshots
