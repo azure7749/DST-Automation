@@ -152,10 +152,23 @@ class DigitalLibraryUploader:
             print(f"Current URL: {self.driver.current_url}")
             self._take_screenshot("pre_upload_state")
             # File file_uploader handling
-            file_input = self.wait.until(EC.presence_of_element_located(
+            file_input = self.wait.until(EC.element_to_be_clickable(
                 (By.XPATH, "//input[@type='file']")
             ))
-            file_input.send_keys(str(file_path))
+            # Upload the file
+            file_input.send_keys(str(file_path.resolve()))
+            print("⏳ Waiting for upload to complete...")
+
+            # Wait until the input value is updated (or you could check for a new DOM element)
+            self.wait.until(
+                lambda d: file_input.get_attribute("value") and file_input.get_attribute("value") != ''
+            )
+
+            # Or if the site displays uploaded file info
+            # self.wait.until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, ".file-name"), file_path.name))
+
+            print("✅ File upload detected")
+
 
             # 6. Handle save button with multiple fallbacks
             save_button_xpaths = [

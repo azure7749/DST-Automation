@@ -19,23 +19,26 @@ df = pd.read_excel(excel_file, sheet_name=0)  # Assuming the first sheet is the 
 # Update PDF and Transcript columns based on CSV data
 for index, row in df.iterrows():
     identifiers = str(row['field_identifier']).split(',')
-    pdf_created = 'No'
-    transcript_uploaded = 'No'
+
+    # Normalize values
+    pdf_created = str(df.at[index, 'PDF/TXT Created?']).strip()
+    transcript_uploaded = str(df.at[index, 'Transcript Uploaded?']).strip()
+
+    pdf_created = pdf_created if pdf_created in ['Yes', 'No'] else 'No'
+    transcript_uploaded = transcript_uploaded if transcript_uploaded in ['Yes', 'No'] else 'No'
 
     for part in identifiers:
-        # Clean the part: strip whitespace and remove leading non-alphanumeric characters
         cleaned_part = part.strip().lstrip(':').strip()
-        if cleaned_part.startswith('mvp_'):
-            if cleaned_part in csv_data:
-                pdf_val, metadata_val = csv_data[cleaned_part]
-                if pdf_val == 'Yes':
-                    pdf_created = 'Yes'
-                if metadata_val == 'Yes':
-                    transcript_uploaded = 'Yes'
+        if cleaned_part.startswith('mvp_') and cleaned_part in csv_data:
+            pdf_val, metadata_val = csv_data[cleaned_part]
+            if pdf_val == 'Yes' and pdf_created != 'Yes':
+                pdf_created = 'Yes'
+            if metadata_val == 'Yes' and transcript_uploaded != 'Yes':
+                transcript_uploaded = 'Yes'
 
-    # Update the row in the DataFrame
     df.at[index, 'PDF/TXT Created?'] = pdf_created
     df.at[index, 'Transcript Uploaded?'] = transcript_uploaded
+
 
 # Save the updated DataFrame to a new Excel file
 with pd.ExcelWriter('../files/updated_project_status.xlsx') as writer:
